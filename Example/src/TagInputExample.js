@@ -112,6 +112,7 @@ export default class TagInputExample extends Component {
             maxHeight={75}
             scrollHorizontal
             onRemoveTagAtIndex={this.onRemoveTagAtIndex}
+            inputDefaultWidth={150}
           />
         </View>
 
