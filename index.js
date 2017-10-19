@@ -82,6 +82,14 @@ type OptionalProps = {
    * Callback that gets passed the new component height when it changes
    */
   onHeightChange?: (height: number) => void,
+  /**
+   * Whether the wrapper scrollView should scroll horizontally
+   */
+  scrollHorizontal: bool,
+  /**
+   * Any misc. ScrollView props (showsHorizontalScrollIndicator, etc.)
+   */
+  scrollViewProps: $PropertyType<ScrollView, 'props'>,
 };
 type Props<T> = RequiredProps<T> & OptionalProps;
 type State = {
@@ -106,6 +114,8 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     inputProps: PropTypes.shape(TextInput.propTypes),
     maxHeight: PropTypes.number,
     onHeightChange: PropTypes.func,
+    scrollHorizontal: PropTypes.bool,
+    scrollViewProps: PropTypes.shape(ScrollView.propTypes),
   };
   props: Props<T>;
   state: State = {
@@ -126,6 +136,7 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     tagTextColor: '#777777',
     inputColor: '#777777',
     maxHeight: 75,
+    scrollHorizontal: false,
   };
 
   static inputWidth(text: string, spaceLeft: number, wrapperWidth: number) {
@@ -189,6 +200,9 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     const tags = [...this.props.value];
     tags.pop();
     this.props.onChange(tags);
+    if (this.props.scrollHorizontal) {
+      this.scrollToRight();
+    }
     this.focus();
   }
 
@@ -214,6 +228,12 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
       "this.scrollView ref should exist before scrollToBottom called",
     );
     scrollView.scrollTo({ y, animated: true });
+  }
+
+  scrollToRight = () => {
+    setTimeout(() => {
+      this.scrollView.scrollToEnd({ animated: true });
+    }, 0);
   }
 
   render() {
@@ -242,9 +262,12 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
           <ScrollView
             ref={this.scrollViewRef}
             style={styles.tagInputContainerScroll}
+            horizontal={this.props.scrollHorizontal}
             onContentSizeChange={this.onScrollViewContentSizeChange}
             onLayout={this.onScrollViewLayout}
             keyboardShouldPersistTaps="handled"
+            showsHorizontalScrollIndicator={false}
+            {...this.props.scrollViewProps}
           >
             <View style={styles.tagInputContainer}>
               {tags}

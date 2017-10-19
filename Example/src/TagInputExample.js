@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
+  Platform,
 } from 'react-native';
 import TagInput from 'react-native-tag-input';
 
@@ -10,11 +11,22 @@ const inputProps = {
   placeholder: 'email',
   autoFocus: true,
 };
+const horizontalInputProps = {
+  keyboardType: 'default',
+  returnKeyType: 'search',
+  placeholder: 'Search',
+  style: {
+    fontSize: 14,
+    marginVertical: Platform.OS == 'ios' ? 10 : -2,
+  },
+};
 
 export default class TagInputExample extends Component {
   state = {
     tags: [],
     text: "",
+    horizontalTags: [],
+    horizontalText: "",
   };
 
   onChangeTags = (tags) => {
@@ -35,11 +47,33 @@ export default class TagInputExample extends Component {
     }
   }
 
+  onChangeHorizontalTags = (horizontalTags) => {
+    this.setState({
+      horizontalTags,
+    });
+  };
+
+  onChangeHorizontalText = (horizontalText) => {
+    this.setState({ horizontalText });
+
+    const lastTyped = horizontalText.charAt(horizontalText.length - 1);
+    const parseWhen = [',', ' ', ';', '\n'];
+
+    if (parseWhen.indexOf(lastTyped) > -1) {
+      this.setState({
+        horizontalTags: [...this.state.horizontalTags, this.state.horizontalText],
+        horizontalText: "",
+      });
+    }
+  }
+
   labelExtractor = (tag) => tag;
 
   render() {
     return (
       <View style={{ flex: 1, margin: 10, marginTop: 30 }}>
+
+        <Text style={{marginVertical: 10}}>Vertical Scroll</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center'}}>
           <Text>To: </Text>
           <TagInput
@@ -54,6 +88,25 @@ export default class TagInputExample extends Component {
             maxHeight={75}
           />
         </View>
+
+        <Text style={{marginVertical: 10}}>Horizontal Scroll</Text>
+        <View style={{marginBottom: 10, flexDirection: 'row', alignItems: 'center', backgroundColor: 'lightblue'}}>
+          <Text>To: </Text>
+          <TagInput
+            ref={(horizontalTagInput) => {this._horizontalTagInput = horizontalTagInput}}
+            value={this.state.horizontalTags}
+            onChange={this.onChangeHorizontalTags}
+            labelExtractor={this.labelExtractor}
+            text={this.state.horizontalText}
+            onChangeText={this.onChangeHorizontalText}
+            tagColor="blue"
+            tagTextColor="white"
+            inputProps={horizontalInputProps}
+            maxHeight={75}
+            scrollHorizontal
+          />
+        </View>
+
       </View>
     );
   }
