@@ -6,31 +6,21 @@ import {
 } from 'react-native';
 import TagInput from 'react-native-tag-input';
 
-const inputProps = {
-  keyboardType: 'default',
-  placeholder: 'email',
-  autoFocus: true,
-};
-const horizontalInputProps = {
-  keyboardType: 'default',
-  returnKeyType: 'search',
-  placeholder: 'Search',
-  style: {
-    fontSize: 14,
-    marginVertical: Platform.OS == 'ios' ? 10 : -2,
-  },
-};
-
 export default class TagInputExample extends Component {
   state = {
     tags: [],
     text: "",
+    inputDefaultWidth: 150,
     horizontalTags: [],
     horizontalText: "",
+    horizontalInputDefaultWidth: 150,
   };
 
   onChangeTags = (tags) => {
-    this.setState({ tags });
+    this.setState({
+      tags,
+      inputDefaultWidth: tags.length > 0 ? 50 : 150,
+     });
   }
 
   onChangeText = (text) => {
@@ -43,6 +33,7 @@ export default class TagInputExample extends Component {
       this.setState({
         tags: [...this.state.tags, this.state.text],
         text: "",
+        inputDefaultWidth: 50,
       });
     }
   }
@@ -50,6 +41,7 @@ export default class TagInputExample extends Component {
   onChangeHorizontalTags = (horizontalTags) => {
     this.setState({
       horizontalTags,
+      horizontalInputDefaultWidth: horizontalTags.length > 0 ? 50 : 150,
     });
   };
 
@@ -63,6 +55,7 @@ export default class TagInputExample extends Component {
       this.setState({
         horizontalTags: [...this.state.horizontalTags, this.state.horizontalText],
         horizontalText: "",
+        horizontalInputDefaultWidth: 50,
       });
       this._horizontalTagInput.scrollToRight();
     }
@@ -77,6 +70,22 @@ export default class TagInputExample extends Component {
   }
 
   render() {
+    const inputProps = {
+      keyboardType: 'default',
+      placeholder: this.state.tags.length > 0 ? '' : 'long placeholder string',
+      autoFocus: true,
+    };
+
+    const horizontalInputProps = {
+      keyboardType: 'default',
+      returnKeyType: 'search',
+      placeholder: this.state.horizontalTags.length > 0 ? '' : 'long placeholder string',
+      style: {
+        fontSize: 14,
+        marginVertical: Platform.OS == 'ios' ? 10 : -2,
+      },
+    };
+
     return (
       <View style={{ flex: 1, margin: 10, marginTop: 30 }}>
 
@@ -93,6 +102,7 @@ export default class TagInputExample extends Component {
             tagTextColor="white"
             inputProps={inputProps}
             maxHeight={75}
+            inputDefaultWidth={this.state.inputDefaultWidth}
           />
         </View>
 
@@ -112,7 +122,7 @@ export default class TagInputExample extends Component {
             maxHeight={75}
             scrollHorizontal
             onRemoveTagAtIndex={this.onRemoveTagAtIndex}
-            inputDefaultWidth={150}
+            inputDefaultWidth={this.state.horizontalInputDefaultWidth}
           />
         </View>
 
