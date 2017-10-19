@@ -67,7 +67,7 @@ type OptionalProps = {
    */
   tagTextStyle?: StyleObj,
   /**
-   * Styling override for tag's text component
+   * Width override for text input's default width when it's empty and showing placeholder
    */
   inputDefaultWidth?: number,
   /**
