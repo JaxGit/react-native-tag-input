@@ -86,6 +86,14 @@ type OptionalProps = {
    * Whether to treat a blur event as a separator entry (iOS-only)
    */
   parseOnBlur: bool,
+  /**
+   * Whether the wrapper scrollView should scroll horizontally
+   */
+  scrollHorizontal: bool,
+  /**
+   * Any misc. ScrollView props (showsHorizontalScrollIndicator, etc.)
+   */
+  scrollViewProps: bool,
 };
 type Props<T> = RequiredProps<T> & OptionalProps;
 type State = {
@@ -115,6 +123,8 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     maxHeight: PropTypes.number,
     onHeightChange: PropTypes.func,
     parseOnBlur: PropTypes.bool,
+    scrollHorizontal: PropTypes.bool,
+    scrollViewProps: PropTypes.shape(TextInput.propTypes),
   };
   props: Props<T>;
   state: State = {
@@ -139,6 +149,7 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     inputColor: '#777777',
     maxHeight: 75,
     parseOnBlur: false,
+    scrollHorizontal: false,
   };
 
   static inputWidth(text: string, spaceLeft: number, wrapperWidth: number) {
@@ -221,6 +232,9 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     if (results && results.length > 0) {
       this.setState({ text: '' });
       this.props.onChange([...new Set([...value, ...results])]);
+      if (this.props.scrollHorizontal) {
+        this.scrollToRight();
+      }
     }
   }
 
@@ -231,6 +245,9 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     const tags = [...this.props.value];
     tags.pop();
     this.props.onChange(tags);
+    if (this.props.scrollHorizontal) {
+      this.scrollToRight();
+    }
     this.focus();
   }
 
@@ -256,6 +273,12 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
       "this.scrollView ref should exist before scrollToBottom called",
     );
     scrollView.scrollTo({ y, animated: true });
+  }
+
+  scrollToRight = () => {
+    setTimeout(() => {
+      this.scrollView.scrollToEnd({ animated: true });
+    }, 0);
   }
 
   render() {
@@ -287,9 +310,12 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
           <ScrollView
             ref={this.scrollViewRef}
             style={styles.tagInputContainerScroll}
+            horizontal={this.props.scrollHorizontal}
             onContentSizeChange={this.onScrollViewContentSizeChange}
             onLayout={this.onScrollViewLayout}
             keyboardShouldPersistTaps="handled"
+            showsHorizontalScrollIndicator={false}
+            {...this.props.scrollViewProps}
           >
             <View style={styles.tagInputContainer}>
               {tags}
