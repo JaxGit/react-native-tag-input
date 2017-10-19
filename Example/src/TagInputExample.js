@@ -64,6 +64,7 @@ export default class TagInputExample extends Component {
         horizontalTags: [...this.state.horizontalTags, this.state.horizontalText],
         horizontalText: "",
       });
+      this._horizontalTagInput.scrollToRight();
     }
   }
 
