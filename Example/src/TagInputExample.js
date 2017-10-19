@@ -64,7 +64,7 @@ export default class TagInputExample extends Component {
         <View style={{marginBottom: 10, flexDirection: 'row', alignItems: 'center', backgroundColor: 'lightblue'}}>
           <Text>To: </Text>
           <TagInput
-            ref='horizontalTagInput'
+            ref={(horizontalTagInput) => {this._horizontalTagInput = horizontalTagInput}}
             value={this.state.horizontalTags}
             onChange={this.onChangeHorizontalTags}
             labelExtractor={this.labelExtractor}
