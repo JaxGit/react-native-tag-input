@@ -70,6 +70,12 @@ export default class TagInputExample extends Component {
 
   labelExtractor = (tag) => tag;
 
+  onRemoveTagAtIndex = () => {
+    this.setState({
+      horizontalText: "",
+    })
+  }
+
   render() {
     return (
       <View style={{ flex: 1, margin: 10, marginTop: 30 }}>
@@ -105,6 +111,7 @@ export default class TagInputExample extends Component {
             inputProps={horizontalInputProps}
             maxHeight={75}
             scrollHorizontal
+            onRemoveTagAtIndex={this.onRemoveTagAtIndex}
           />
         </View>
 

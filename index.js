@@ -105,6 +105,7 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     labelExtractor: PropTypes.func.isRequired,
     text: PropTypes.string.isRequired,
     onChangeText: PropTypes.func.isRequired,
+    onRemoveTagAtIndex: PropTypes.func,
     tagColor: PropTypes.string,
     tagTextColor: PropTypes.string,
     tagContainerStyle: ViewPropTypes.style,
@@ -214,6 +215,9 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
   removeIndex = (index: number) => {
     const tags = [...this.props.value];
     tags.splice(index, 1);
+    if (this.props.onRemoveTagAtIndex) {
+      this.props.onRemoveTagAtIndex(index);
+    }
     this.props.onChange(tags);
   }
 
