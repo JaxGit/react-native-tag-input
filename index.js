@@ -93,7 +93,7 @@ type OptionalProps = {
   /**
    * Any misc. ScrollView props (showsHorizontalScrollIndicator, etc.)
    */
-  scrollViewProps: bool,
+  scrollViewProps: $PropertyType<ScrollView, 'props'>,
 };
 type Props<T> = RequiredProps<T> & OptionalProps;
 type State = {
@@ -124,7 +124,7 @@ class TagInput<T> extends React.PureComponent<Props<T>, State> {
     onHeightChange: PropTypes.func,
     parseOnBlur: PropTypes.bool,
     scrollHorizontal: PropTypes.bool,
-    scrollViewProps: PropTypes.shape(TextInput.propTypes),
+    scrollViewProps: PropTypes.shape(ScrollView.propTypes),
   };
   props: Props<T>;
   state: State = {
